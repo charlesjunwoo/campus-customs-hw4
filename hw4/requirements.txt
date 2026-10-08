@@ -1,0 +1,6 @@
+# Campus Customs backend (Python 3.12+). Install from the hw4/ folder:
+#   python3 -m venv backend/.venv && backend/.venv/bin/python -m pip install -r requirements.txt
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic-ai-slim[openai]>=1.0
+python-dotenv>=1.0

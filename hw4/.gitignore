@@ -1,0 +1,36 @@
+# ---- Local-only data pack: NEVER commit -------------------------------
+# The database, product images, and anything else under data/ stay local.
+data/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+products/
+*.jpg
+*.jpeg
+*.webp
+
+# ---- Secrets ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---- Python -------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# ---- Node / build -------------------------------------------------------
+node_modules/
+dist/
+*.tsbuildinfo
+
+# ---- Local tooling / OS -------------------------------------------------
+.claude/
+.DS_Store
+*.log
+output/audit_trail.recovered.jsonl

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Customs: App Check</title>
+<style>
+  :root { --navy:#00356b; --pumpkin:#ff7518; --ink:#160f1f; --bone:#f6eddc; --ok:#138a5e; --bad:#b3261e; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:16px/1.55 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color:var(--ink); background:var(--bone); }
+  header { background:var(--navy); color:#fff; padding:28px 32px; border-bottom:6px solid var(--pumpkin); }
+  header h1 { margin:0 0 6px; font-size:28px; }
+  header p { margin:0; opacity:.9; }
+  main { max-width:1100px; margin:0 auto; padding:24px 32px 60px; }
+  .summary { background:#fff; border:3px solid var(--ink); box-shadow:5px 5px 0 var(--ink); padding:16px 20px; margin-bottom:28px; }
+  .summary ol { margin:8px 0 0; padding-left:22px; }
+  .check { background:#fff; border:3px solid var(--ink); box-shadow:5px 5px 0 var(--navy); padding:18px 20px 20px; margin:0 0 28px; }
+  .check h2 { margin:0 0 12px; font-size:20px; color:var(--navy); }
+  .badge { display:inline-block; margin-left:8px; padding:2px 10px; border-radius:999px; font-size:13px; color:#fff; vertical-align:middle; }
+  .badge.pass { background:var(--ok); } .badge.fail { background:var(--bad); }
+  img { display:block; max-width:100%; border:2px solid var(--ink); margin:0 auto; }
+  .proves { margin:14px 0 10px; font-size:17px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; width:190px; vertical-align:top; padding:6px 8px; background:#f3efe6; border:1px solid #ddd; }
+  td { padding:6px 8px; border:1px solid #ddd; }
+  footer { text-align:center; font-size:13px; color:#666; padding-bottom:30px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Campus Customs: App Check</h1>
+  <p>9 of 9 checks passed · run 2026-10-07 22:57 · live app (React/Vite :5173 → FastAPI :8000), real model, real campus_customs.db</p>
+</header>
+<main>
+  <div class="summary">
+    <strong>How to read this:</strong> each check has a headline, a screenshot taken automatically by
+    <code>tools/app_check.py</code> (Playwright driving Chrome), and one or two sentences on what it proves. Expected values
+    come straight from the database, so PASS means the app matched the data. Click a screenshot to open it full size.
+    <ol><li><a href="#home">1. The site loads: home page with navigation</a> ✅</li><li><a href="#products">2. Products page lists the whole catalogue as cards</a> ✅</li><li><a href="#login">3. The seeded test user can log in</a> ✅</li><li><a href="#inventory">4. Chat checks inventory: exact stock and price from the database</a> ✅</li><li><a href="#out-of-stock">5. Chat says definitively when a size is out of stock</a> ✅</li><li><a href="#category-cards">6. A category question (“What hoodies do you have?”) returns dynamic product cards</a> ✅</li><li><a href="#card-opens-product">7. Clicking a chat-surfaced card opens the full product page</a> ✅</li><li><a href="#sku">8. Problem 9 usability feature: SKU info on the product page</a> ✅</li><li><a href="#recap">9. Problem 9 usability feature: chat history reloads with a welcome-back recap</a> ✅</li></ol>
+  </div>
+  
+  <section class="check" id="home">
+    <h2>1. The site loads: home page with navigation <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/01-home.png" target="_blank"><img src="app_check_images/01-home.png" alt="Screenshot: 1. The site loads: home page with navigation"></a>
+    <p class="proves"><strong>What this proves:</strong> The React/Vite storefront is up and talking to the FastAPI backend: the nav links (Home, Products, About Us, Log In, Create Account) render, and the featured products are loaded from the API.</p>
+    <table><tr><th>Theme</th><td>halloween</td></tr><tr><th>Featured cards</th><td>4</td></tr></table>
+  </section>
+  <section class="check" id="products">
+    <h2>2. Products page lists the whole catalogue as cards <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/02-products.png" target="_blank"><img src="app_check_images/02-products.png" alt="Screenshot: 2. Products page lists the whole catalogue as cards"></a>
+    <p class="proves"><strong>What this proves:</strong> All 102 rows of the catalogue table appear as product cards (image, name, price, one-liner), fed by GET /api/products.</p>
+    <table><tr><th>Cards on page</th><td>102</td></tr><tr><th>Rows in catalogue table</th><td>102</td></tr></table>
+  </section>
+  <section class="check" id="login">
+    <h2>3. The seeded test user can log in <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/03-login.png" target="_blank"><img src="app_check_images/03-login.png" alt="Screenshot: 3. The seeded test user can log in"></a>
+    <p class="proves"><strong>What this proves:</strong> Logging in as test@campuscustoms.yale.edu with the provided password succeeds (the nav greets “Hi, Test!”), so the seeded PBKDF2 hash verifies against the backend.</p>
+    <table><tr><th>Nav greeting</th><td>Hi, Test!</td></tr></table>
+  </section>
+  <section class="check" id="inventory">
+    <h2>4. Chat checks inventory: exact stock and price from the database <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/04-inventory.png" target="_blank"><img src="app_check_images/04-inventory.png" alt="Screenshot: 4. Chat checks inventory: exact stock and price from the database"></a>
+    <p class="proves"><strong>What this proves:</strong> Asked about size M of the Yale Grandpa Hoodie, the chat answered with 25 in stock at $68, exactly the values in the inventory and catalogue tables.</p>
+    <table><tr><th>Question</th><td>How many Yale Grandpa Hoodies do you have in size M, and what&#x27;s the price?</td></tr><tr><th>Chat reply</th><td>The Yale Grandpa Hoodie has 25 in size M, and it’s $68. Boola boola! 🎃</td></tr><tr><th>Database</th><td>price $68; M = 25</td></tr></table>
+  </section>
+  <section class="check" id="out-of-stock">
+    <h2>5. Chat says definitively when a size is out of stock <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/05-out-of-stock.png" target="_blank"><img src="app_check_images/05-out-of-stock.png" alt="Screenshot: 5. Chat says definitively when a size is out of stock"></a>
+    <p class="proves"><strong>What this proves:</strong> Size L has quantity 0 in the database, and the chat states plainly that it is out of stock (no hedging), then offers the sizes that are in stock.</p>
+    <table><tr><th>Question</th><td>Is the Yale Grandpa Hoodie available in size L?</td></tr><tr><th>Chat reply</th><td>Size L is out of stock for the Yale Grandpa Hoodie. It’s available in XS, S, M, XL, and XXL.</td></tr><tr><th>Database</th><td>XS=5, S=20, M=25, L=0, XL=2, XXL=12</td></tr></table>
+  </section>
+  <section class="check" id="category-cards">
+    <h2>6. A category question (“What hoodies do you have?”) returns dynamic product cards <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/06-category-cards.png" target="_blank"><img src="app_check_images/06-category-cards.png" alt="Screenshot: 6. A category question (“What hoodies do you have?”) returns dynamic product cards"></a>
+    <p class="proves"><strong>What this proves:</strong> The agent searched the catalogue and the site rendered 12 hoodie cards in the “Chat picks” strip (and in the chat). Every card&#x27;s category is Hoodies and every price matches the database.</p>
+    <table><tr><th>Chat reply</th><td>We have 27 hoodies in total, and I’ve pulled up 12 options below to browse. Boola boola! 🎃</td></tr><tr><th>Strip title</th><td>YALE HOODIES 12</td></tr><tr><th>Cards</th><td>12</td></tr><tr><th>Price mismatches vs DB</th><td>0</td></tr></table>
+  </section>
+  <section class="check" id="card-opens-product">
+    <h2>7. Clicking a chat-surfaced card opens the full product page <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/07-card-opens-product.png" target="_blank"><img src="app_check_images/07-card-opens-product.png" alt="Screenshot: 7. Clicking a chat-surfaced card opens the full product page"></a>
+    <p class="proves"><strong>What this proves:</strong> The first chat card opened /products/basic-hoodie-big-yale with the large image, full description, price, sizes and stock, the same single-item page as the Products grid.</p>
+    <table><tr><th>URL</th><td>/products/basic-hoodie-big-yale</td></tr><tr><th>Name / price</th><td>Basic Hoodie Big Yale / $68.00</td></tr></table>
+  </section>
+  <section class="check" id="sku">
+    <h2>8. Problem 9 usability feature: SKU info on the product page <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/08-sku.png" target="_blank"><img src="app_check_images/08-sku.png" alt="Screenshot: 8. Problem 9 usability feature: SKU info on the product page"></a>
+    <p class="proves"><strong>What this proves:</strong> Picking size M shows SKU CC-0507-M with its stock count and a Copy SKU button. The SKU is built from that size&#x27;s permanent inventory-table id, so staff and shoppers can name the exact unit.</p>
+    <table><tr><th>SKU shown</th><td>CC-0507-M</td></tr><tr><th>Expected from inventory.id</th><td>CC-0507-M</td></tr></table>
+  </section>
+  <section class="check" id="recap">
+    <h2>9. Problem 9 usability feature: chat history reloads with a welcome-back recap <span class="badge pass">PASS</span></h2>
+    <a href="app_check_images/09-recap.png" target="_blank"><img src="app_check_images/09-recap.png" alt="Screenshot: 9. Problem 9 usability feature: chat history reloads with a welcome-back recap"></a>
+    <p class="proves"><strong>What this proves:</strong> After logging out and back in, the test user&#x27;s earlier conversation (including checks 4–6) reloads from the database, ending with a recap of the products they looked at, re-priced from live stock.</p>
+    <table><tr><th>Recap</th><td>Welcome back, Test! Last time (Oct 8) you were looking at these. Here&#x27;s where they stand today:<br><br>Basic Hoodie Big Yale: $68, in stock in XS, S, M, L, XL, XXL; running low: S (5 left), M (5 left), XL (2 left)<br>Yale Grandpa Hoodie: $68, in stock in XS, S, M, XL, XXL; running low: XS (5 left), XL (2 left)<br>Baseball Left Chest Crewneck: $58, in stock in S, M, L, XXL; running low: M (5 left)<br><br>Want me to check a size, or find something new?</td></tr></table>
+  </section>
+</main>
+<footer>Generated by tools/app_check.py in 29s. Screenshots: output/app_check_images/</footer>
+</body>
+</html>
